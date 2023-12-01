@@ -1,44 +1,57 @@
 #include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
-//problem 1
-//For example:
-//1abc2
-//pqr3stu8vwx
-//a1b2c3d4e5f
-//treb7uchet
-//In this example, the calibration values of these four lines are 12, 38, 15, and 77.
-//Adding these together produces 142.
-int calibrationSum(string &line) {
-    char firstdigit = '0', lastdigit = '0';
-    bool foundfirstdigit;
-    for(char ch : line) {
-        if(isdigit(ch)) {
-            firstdigit = ch;
-            foundfirstdigit = true;
-            break;
-        }
-    }
-    if(foundfirstdigit == true) {
-        for(int i = line.length()-1; i>=0;i--) {
-            if(isdigit(line[i])){
-                lastdigit = line[i];
-                break;
+
+const string digits[] = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+
+int parse(string &s, bool task2) {
+    int first = 1e9, last = -1;
+    int firstv = -1, lastv = -1;
+    for (char c = '1'; c <= '9'; ++c) {
+        int id = s.find(c);
+        if (id != string::npos) {
+            if (id < first) {
+                first = id;
+                firstv = c - '0';
+            }
+            id = s.rfind(c);
+            if (id > last) {
+                last = id;
+                lastv = c - '0';
             }
         }
-    } else {
-        return 0;
     }
-    return (firstdigit - '0') * 10 + (lastdigit - '0');
-
+    if (task2) {
+        for (int i = 1; i < 10; ++i) {
+            int id = s.find(digits[i]);
+            if (id != string::npos) {
+                if (id < first) {
+                    first = id;
+                    firstv = i;
+                }
+                id = s.rfind(digits[i]);
+                if (id > last) {
+                    last = id;
+                    lastv = i;
+                }
+            }
+        }
+    }
+    // Check for the case when no digits are found
+    if (firstv == -1 || lastv == -1) return 0;
+    return firstv * 10 + lastv;
 }
+
 int main() {
-    string line;
-    int totalsum = 0;
-    while(getline(cin,line)) {
-        if(line.empty()) continue;
-        totalsum += calibrationSum(line);
+    string s;
+    int res = 0, res2 = 0;
+    while (getline(cin, s)) {
+        res += parse(s, false); // Part 1
+        res2 += parse(s, true); // Part 2
+        cout<<res2;
     }
-    cout << "Total calibration value: " << totalsum << std::endl;
+    cout << res << " " << res2 << "\n";
     return 0;
 }
