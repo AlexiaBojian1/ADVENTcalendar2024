@@ -5,12 +5,15 @@
 using namespace std;
 
 const string digits[] = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-
+//rfind =  search for the last occurance of a string;
 int parse(string &s, bool task2) {
+    //indexes
     int first = 1e9, last = -1;
+    //values
     int firstv = -1, lastv = -1;
     for (char c = '1'; c <= '9'; ++c) {
         int id = s.find(c);
+        //search was succesful
         if (id != string::npos) {
             if (id < first) {
                 first = id;
